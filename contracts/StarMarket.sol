@@ -1,5 +1,8 @@
 pragma solidity ^0.4.8;
-contract StarMarket {
+
+import './zeppelin/ownership/Ownable.sol';
+
+contract StarMarket is Ownable {
 
 // You can use this hash to verify the csv file containing all the stars
     string public csvHash = "";
@@ -66,8 +69,7 @@ contract StarMarket {
         decimals = 0;                                       // Amount of decimals for display purposes
     }
 
-    function setInitialOwner(address to, uint starIndex) {
-        if (msg.sender != owner) throw;
+    function setInitialOwner(address to, uint starIndex) onlyOwner {
         if (allStarsAssigned) throw;
         if (starIndex >= 10000) throw;
         if (starIndexToAddress[starIndex] != to) {
@@ -82,16 +84,14 @@ contract StarMarket {
         }
     }
 
-    function setInitialOwners(address[] addresses, uint[] indices) {
-        if (msg.sender != owner) throw;
+    function setInitialOwners(address[] addresses, uint[] indices) onlyOwner {
         uint n = addresses.length;
         for (uint i = 0; i < n; i++) {
             setInitialOwner(addresses[i], indices[i]);
         }
     }
 
-    function allInitialOwnersAssigned() {
-        if (msg.sender != owner) throw;
+    function allInitialOwnersAssigned() onlyOwner {
         allStarsAssigned = true;
     }
 
