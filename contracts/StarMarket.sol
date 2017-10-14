@@ -121,7 +121,7 @@ contract StarMarket is Ownable {
         StarTransfer(msg.sender, to, starIndex);
     // Check for the case where there is a bid from the new owner and refund it.
     // Any other bid can stay in place.
-        Bid bid = starBids[starIndex];
+        Bid storage bid = starBids[starIndex];
         if (bid.bidder == to) {
         // Kill bid and refund value
             pendingWithdrawals[to] += bid.value;
@@ -155,7 +155,7 @@ contract StarMarket is Ownable {
 
     function buyStar(uint starIndex) payable {
         if (!allStarsAssigned) revert();
-        Offer offer = starsOfferedForSale[starIndex];
+        Offer storage offer = starsOfferedForSale[starIndex];
         if (starIndex >= 10000) revert();
         if (!offer.isForSale) revert();                // star not actually for sale
         if (offer.onlySellTo != 0x0 && offer.onlySellTo != msg.sender) revert();  // star not supposed to be sold to this user
@@ -175,7 +175,7 @@ contract StarMarket is Ownable {
 
     // Check for the case where there is a bid from the new owner and refund it.
     // Any other bid can stay in place.
-        Bid bid = starBids[starIndex];
+        Bid storage bid = starBids[starIndex];
         if (bid.bidder == msg.sender) {
         // Kill bid and refund value
             pendingWithdrawals[msg.sender] += bid.value;
@@ -198,7 +198,7 @@ contract StarMarket is Ownable {
         if (starIndexToAddress[starIndex] == 0x0) revert();
         if (starIndexToAddress[starIndex] == msg.sender) revert();
         if (msg.value == 0) revert();
-        Bid existing = starBids[starIndex];
+        Bid storage existing = starBids[starIndex];
         if (msg.value <= existing.value) revert();
         if (existing.value > 0) {
         // Refund the failing bid
@@ -213,7 +213,7 @@ contract StarMarket is Ownable {
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] != msg.sender) revert();
         address seller = msg.sender;
-        Bid bid = starBids[starIndex];
+        Bid storage bid = starBids[starIndex];
         if (bid.value == 0) revert();
         if (bid.value < minPrice) revert();
 
@@ -234,7 +234,7 @@ contract StarMarket is Ownable {
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] == 0x0) revert();
         if (starIndexToAddress[starIndex] == msg.sender) revert();
-        Bid bid = starBids[starIndex];
+        Bid storage bid = starBids[starIndex];
         if (bid.bidder != msg.sender) revert();
         StarBidWithdrawn(starIndex, bid.value, msg.sender);
         uint amount = bid.value;
