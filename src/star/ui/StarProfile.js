@@ -3,6 +3,7 @@ import React from 'react';
 import ClaimButton from './claimbutton/ClaimButtonContainer';
 import BidSection from './bidbutton/BidSection';
 import OfferSection from './offerbutton/OfferSection';
+import TransferSection from './transferbutton/TransferSection';
 import RevokeOfferButton from './revokeOfferbutton/RevokeOfferButtonContainer';
 
 const Spectrum = ({color}) => {
@@ -47,6 +48,8 @@ const StarProfile = (props) => {
             <OfferSection starIndex={props.params.id} />
             <br />
             <RevokeOfferButton starIndex={props.params.id} />
+            <br /><br />
+            <TransferSection starIndex={props.params.id} />
 
             <h2>Current Marketplace Status</h2>
           </div>
