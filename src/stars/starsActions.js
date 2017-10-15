@@ -20,7 +20,7 @@ export function getStarsByConstellation(constellation) {
       let json = response.json()
       return json
     }).then((json) => {
-      dispatch(starsDetailsReceived(json))
+      dispatch(starsReceived(json))
     })
   }
 }
