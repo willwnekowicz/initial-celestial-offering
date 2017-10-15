@@ -76,8 +76,8 @@ contract StarMarket is Ownable {
         transactionFeePercentage = 5;                       // Whole number percentage (0-100)
     }
 
-    function setInitialOwner(address to, uint starIndex) onlyOwner {
-        if (allStarsAssigned) revert();
+    function setInitialOwner(address to, uint starIndex, uint initialOffer) onlyOwner {
+        if (allStarsAssigned && !canClaimStars) revert();
         if (starIndex >= totalSupply) revert();
         if (starIndexToAddress[starIndex] != to) {
             if (starIndexToAddress[starIndex] != 0x0) {
@@ -87,14 +87,17 @@ contract StarMarket is Ownable {
             }
             starIndexToAddress[starIndex] = to;
             balanceOf[to]++;
+            if (initialOffer > 0) {
+                offerStarForSale(starIndex, initialOffer);
+            }
             Assign(to, starIndex);
         }
     }
 
-    function setInitialOwners(address[] addresses, uint[] indices) onlyOwner {
+    function setInitialOwners(address[] addresses, uint[] indices, uint[] initialOffers) onlyOwner {
         uint n = addresses.length;
         for (uint i = 0; i < n; i++) {
-            setInitialOwner(addresses[i], indices[i]);
+            setInitialOwner(addresses[i], indices[i], initialOffers[i]);
         }
     }
 
