@@ -15,6 +15,7 @@ contract StarMarket is Ownable {
     uint8 public decimals;
     uint256 public totalSupply;
     uint256 public claimFee;
+    uint8 public transactionFeePercentage;
 
     uint public nextStarIndexToAssign = 0; // TODO: unused, remove?
 
@@ -57,9 +58,10 @@ contract StarMarket is Ownable {
     event StarOffered(uint indexed starIndex, uint minValue, address indexed toAddress);
     event StarBidEntered(uint indexed starIndex, uint value, address indexed fromAddress);
     event StarBidWithdrawn(uint indexed starIndex, uint value, address indexed fromAddress);
-    event StarBought(uint indexed starIndex, uint value, address indexed fromAddress, address indexed toAddress);
+    event StarBought(uint indexed starIndex, uint value, address indexed fromAddress, address indexed toAddress, uint256 transactionFee);
     event StarNoLongerForSale(uint indexed starIndex);
-    event ClaimFeeUpdated(uint256 indexed claimFee);
+    event ClaimFeeUpdated(uint256 indexed newClaimFee);
+    event TransactionFeePercentageUpdated(uint8 indexed newTransactionFeePercentage);
 
 /* Initializes contract with initial supply tokens to the creator of the contract */
     function StarMarket() payable {
@@ -71,6 +73,7 @@ contract StarMarket is Ownable {
         symbol = "★";                                       // Set the symbol for display purposes
         decimals = 0;                                       // Amount of decimals for display purposes
         claimFee = 15000000000000000;                       // Price of claiming a star
+        transactionFeePercentage = 5;                       // Whole number percentage (0-100)
     }
 
     function setInitialOwner(address to, uint starIndex) onlyOwner {
@@ -115,7 +118,14 @@ contract StarMarket is Ownable {
         ClaimFeeUpdated(newClaimFee);
     }
 
-    function getStar(uint starIndex) {
+    function updateTransactionFeePercentage(uint8 newTransactionFeePercentage) onlyOwner {
+        if (newTransactionFeePercentage > 5) revert();                  // Prevent the fee from ever being more than 5%
+        if (newTransactionFeePercentage < 0) revert();
+        transactionFeePercentage = newTransactionFeePercentage;
+        TransactionFeePercentageUpdated(newTransactionFeePercentage);
+    }
+
+    function getStar(uint starIndex) payable {
         if (!allStarsAssigned && !canClaimStars) revert();
         if (starsRemainingToAssign == 0) revert();
         if (starIndexToAddress[starIndex] != 0x0) revert();
@@ -195,8 +205,11 @@ contract StarMarket is Ownable {
         Transfer(seller, msg.sender, 1);
 
         starNoLongerForSale(starIndex);
-        pendingWithdrawals[seller] += msg.value;
-        StarBought(starIndex, msg.value, seller, msg.sender);
+        uint256 transactionFee = msg.value * (transactionFeePercentage / 100);
+        uint256 toSeller = msg.value - transactionFee;
+        pendingWithdrawals[owner] += transactionFee;
+        pendingWithdrawals[seller] += toSeller;
+        StarBought(starIndex, msg.value, seller, msg.sender, transactionFee);
 
     // Check for the case where there is a bid from the new owner and refund it.
     // Any other bid can stay in place.
@@ -248,10 +261,12 @@ contract StarMarket is Ownable {
         Transfer(seller, bid.bidder, 1);
 
         starsOfferedForSale[starIndex] = Offer(false, starIndex, bid.bidder, 0, 0x0);
-        uint amount = bid.value;
+        uint256 transactionFee = bid.value * (transactionFeePercentage / 100);
+        uint256 toSeller = bid.value - transactionFee;
         starBids[starIndex] = Bid(false, starIndex, 0x0, 0);
-        pendingWithdrawals[seller] += amount;
-        StarBought(starIndex, bid.value, seller, bid.bidder);
+        pendingWithdrawals[owner] += transactionFee;
+        pendingWithdrawals[seller] += toSeller;
+        StarBought(starIndex, bid.value, seller, bid.bidder, transactionFee);
     }
 
     function withdrawBidForStar(uint starIndex) {
