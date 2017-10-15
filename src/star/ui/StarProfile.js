@@ -1,15 +1,16 @@
 import React from 'react';
 
+
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
   const style = { background: colors[color[0].toLowerCase()] }
-  return <div className="star-spectrum" style={style}>{color}</div>
+  return <div><div className="star-spectrum" style={style}>{color}</div></div>
 }
 
-const StarProfile = (props) => {
-  const {star} = props;
-
-  return(
+const StarProfile = async (props) => {
+  const star = await props.requestStarData(props.params.id).then((data) =>  data)
+  
+  return (
     <main className="container">
       <div className="pure-g">
         <div className="pure-u-1-1">
