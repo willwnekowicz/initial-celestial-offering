@@ -7,6 +7,7 @@ import OfferSection from './offerbutton/OfferSection';
 import TransferSection from './transferbutton/TransferSection';
 import RevokeOfferButton from './revokeOfferbutton/RevokeOfferButtonContainer';
 import RevokeBidButton from './revokeBidbutton/RevokeBidButtonContainer';
+import WithdrawFundsButton from './withdrawFundsbutton/WithdrawFundsButtonContainer';
 
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
@@ -56,6 +57,8 @@ const StarProfile = (props) => {
             <BuyButton starIndex={props.params.id} />
             <br /><br />
             <TransferSection starIndex={props.params.id} />
+            <br />
+            <WithdrawFundsButton />
 
             <h2>Current Marketplace Status</h2>
           </div>
