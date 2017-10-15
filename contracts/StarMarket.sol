@@ -62,7 +62,7 @@ contract StarMarket is Ownable {
     function StarMarket() payable {
     //        balanceOf[msg.sender] = initialSupply;        // Give the creator all initial tokens
         owner = msg.sender;
-        totalSupply = 10000;                               // Update total supply
+        totalSupply = 119615;                               // Update total supply
         starsRemainingToAssign = totalSupply;
         name = "STARS";                                     // Set the name for display purposes
         symbol = "★";                                       // Set the symbol for display purposes
@@ -71,7 +71,7 @@ contract StarMarket is Ownable {
 
     function setInitialOwner(address to, uint starIndex) onlyOwner {
         if (allStarsAssigned) revert();
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         if (starIndexToAddress[starIndex] != to) {
             if (starIndexToAddress[starIndex] != 0x0) {
                 balanceOf[starIndexToAddress[starIndex]]--;
@@ -95,15 +95,16 @@ contract StarMarket is Ownable {
         allStarsAssigned = true;
     }
 
-    function updateCSVHash(string newHash) onlyOwner {
+    function updateCSV(string newHash, uint256 newTotalSupply) onlyOwner {
         csvHash = newHash;
+        totalSupply = newTotalSupply;
     }
 
     function getStar(uint starIndex) {
         if (!allStarsAssigned) revert();
         if (starsRemainingToAssign == 0) revert();
         if (starIndexToAddress[starIndex] != 0x0) revert();
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         starIndexToAddress[starIndex] = msg.sender;
         balanceOf[msg.sender]++;
         starsRemainingToAssign--;
@@ -114,7 +115,7 @@ contract StarMarket is Ownable {
     function transferStar(address to, uint starIndex) {
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] != msg.sender) revert();
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         if (starsOfferedForSale[starIndex].isForSale) {
             starNoLongerForSale(starIndex);
         }
@@ -136,7 +137,7 @@ contract StarMarket is Ownable {
     function starNoLongerForSale(uint starIndex) {
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] != msg.sender) revert();
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         starsOfferedForSale[starIndex] = Offer(false, starIndex, msg.sender, 0, 0x0);
         StarNoLongerForSale(starIndex);
     }
@@ -144,7 +145,7 @@ contract StarMarket is Ownable {
     function offerStarForSale(uint starIndex, uint minSalePriceInWei) {
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] != msg.sender) revert();
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         starsOfferedForSale[starIndex] = Offer(true, starIndex, msg.sender, minSalePriceInWei, 0x0);
         StarOffered(starIndex, minSalePriceInWei, 0x0);
     }
@@ -152,7 +153,7 @@ contract StarMarket is Ownable {
     function offerStarForSaleToAddress(uint starIndex, uint minSalePriceInWei, address toAddress) {
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] != msg.sender) revert();
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         starsOfferedForSale[starIndex] = Offer(true, starIndex, msg.sender, minSalePriceInWei, toAddress);
         StarOffered(starIndex, minSalePriceInWei, toAddress);
     }
@@ -160,7 +161,7 @@ contract StarMarket is Ownable {
     function buyStar(uint starIndex) payable {
         if (!allStarsAssigned) revert();
         Offer storage offer = starsOfferedForSale[starIndex];
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         if (!offer.isForSale) revert();                // star not actually for sale
         if (offer.onlySellTo != 0x0 && offer.onlySellTo != msg.sender) revert();  // star not supposed to be sold to this user
         if (msg.value < offer.minValue) revert();      // Didn't send enough ETH
@@ -197,7 +198,7 @@ contract StarMarket is Ownable {
     }
 
     function enterBidForStar(uint starIndex) payable {
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] == 0x0) revert();
         if (starIndexToAddress[starIndex] == msg.sender) revert();
@@ -213,7 +214,7 @@ contract StarMarket is Ownable {
     }
 
     function acceptBidForStar(uint starIndex, uint minPrice) {
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] != msg.sender) revert();
         address seller = msg.sender;
@@ -234,7 +235,7 @@ contract StarMarket is Ownable {
     }
 
     function withdrawBidForStar(uint starIndex) {
-        if (starIndex >= 10000) revert();
+        if (starIndex >= totalSupply) revert();
         if (!allStarsAssigned) revert();
         if (starIndexToAddress[starIndex] == 0x0) revert();
         if (starIndexToAddress[starIndex] == msg.sender) revert();
