@@ -14,6 +14,7 @@ contract StarMarket is Ownable {
     string public symbol;
     uint8 public decimals;
     uint256 public totalSupply;
+    uint256 public claimFee;
 
     uint public nextStarIndexToAssign = 0; // TODO: unused, remove?
 
@@ -57,6 +58,7 @@ contract StarMarket is Ownable {
     event StarBidWithdrawn(uint indexed starIndex, uint value, address indexed fromAddress);
     event StarBought(uint indexed starIndex, uint value, address indexed fromAddress, address indexed toAddress);
     event StarNoLongerForSale(uint indexed starIndex);
+    event ClaimFeeUpdated(uint256 indexed claimFee);
 
 /* Initializes contract with initial supply tokens to the creator of the contract */
     function StarMarket() payable {
@@ -67,6 +69,7 @@ contract StarMarket is Ownable {
         name = "STARS";                                     // Set the name for display purposes
         symbol = "★";                                       // Set the symbol for display purposes
         decimals = 0;                                       // Amount of decimals for display purposes
+        claimFee = 15000000000000000;                       // Price of claiming a star
     }
 
     function setInitialOwner(address to, uint starIndex) onlyOwner {
@@ -100,11 +103,18 @@ contract StarMarket is Ownable {
         totalSupply = newTotalSupply;
     }
 
+    function updateClaimFee(uint256 newClaimFee) onlyOwner {
+        claimFee = newClaimFee;
+        ClaimFeeUpdated(newClaimFee);
+    }
+
     function getStar(uint starIndex) {
         if (!allStarsAssigned) revert();
         if (starsRemainingToAssign == 0) revert();
         if (starIndexToAddress[starIndex] != 0x0) revert();
         if (starIndex >= totalSupply) revert();
+        if (msg.value < claimFee) revert();
+        pendingWithdrawals[owner] += msg.value;
         starIndexToAddress[starIndex] = msg.sender;
         balanceOf[msg.sender]++;
         starsRemainingToAssign--;
