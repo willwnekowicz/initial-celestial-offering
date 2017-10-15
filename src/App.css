@@ -70,3 +70,16 @@ code {
 .star-profile {
   background: white;
 }
+
+.star-avatar {
+  background: white;
+}
+
+.star-avatar img {
+  width: 80%;
+}
+
+.star-spectrum {
+  height: 50px;
+  width: 50px;
+}

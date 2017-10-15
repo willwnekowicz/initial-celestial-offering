@@ -12,7 +12,8 @@ import Home from './layouts/home/Home'
 import Dashboard from './layouts/dashboard/Dashboard'
 import SignUp from './user/layouts/signup/SignUp'
 import Profile from './user/layouts/profile/Profile'
-import StarProfile from './star/ui/StarProfile'
+import StarProfileContainer from './star/ui/StarProfileContainer'
+import StarsContainer from './stars/ui/StarsContainer'
 
 // Redux Store
 import store from './store'
@@ -29,6 +30,8 @@ getWeb3
   console.log('Error in web3 initialization.')
 })
 
+
+
 ReactDOM.render((
     <Provider store={store}>
       <Router history={history}>
@@ -37,7 +40,8 @@ ReactDOM.render((
           <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
           <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />
           <Route path="profile" component={UserIsAuthenticated(Profile)} />
-          <Route path="stars/:id" component={StarProfile} />
+          <Route path="stars/:id" component={StarProfileContainer} />
+          <Route path="stars" component={StarsContainer} />
         </Route>
       </Router>
     </Provider>
