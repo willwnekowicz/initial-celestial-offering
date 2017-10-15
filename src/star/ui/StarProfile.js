@@ -1,13 +1,19 @@
 import React from 'react';
+import './star.css'
+
+import { getWeb3 } from '../../util/web3/getWeb3'
 
 import BuyButton from './buybutton/BuyButtonContainer';
 import ClaimButton from './claimbutton/ClaimButtonContainer';
 import BidSection from './bidbutton/BidSection';
+import AcceptBidSection from './acceptBidbutton/AcceptBidSection';
 import OfferSection from './offerbutton/OfferSection';
 import TransferSection from './transferbutton/TransferSection';
 import RevokeOfferButton from './revokeOfferbutton/RevokeOfferButtonContainer';
 import RevokeBidButton from './revokeBidbutton/RevokeBidButtonContainer';
 import WithdrawFundsButton from './withdrawFundsbutton/WithdrawFundsButtonContainer';
+
+import StarDetails from './StarDetails';
 
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
@@ -15,61 +21,107 @@ const Spectrum = ({color}) => {
   return (<div className="star-spectrum" style={style}>{color}</div>)
 }
 
-const StarProfile = async (props) => {
-  const star = await props.requestStarData(props.params.id).then((data) =>  data)
-  
-  return (
-    <main className="container">
-      <div className="pure-g">
-        <div className="pure-u-1-1">
-          <div className="star-avatar pure-u-1-2">
-            <img src="https://exep-archive.jpl.nasa.gov/images/soho_sun-590.jpg" alt="mock"></img>
-          </div>
-          <div className="star-profile pure-u-1-2">
-            <p>Hi my name is { props.params.id }</p>
+class StarProfile extends React.Component {
 
-            <h2>Details</h2>
+  constructor(props) {
+    super(props)
+  }
 
-            <p>Name:
-              <span>{star.gl}</span>
-            </p>
+  componentDidMount() {
+    this.props.getStarDetails(this.props.params.id)
+    getWeb3.then(() => {
+      this.props.getOwnershipDetails(this.props.params.id)
+    });
+  }
+
+  render() {
+    const props = this.props;
+    const {details, ownership} = props;
+
+    return (
+      <main className="container">
+        <StarDetails details={details} />
+        <div className="star-main">
+          <div className="pure-g">
+            <div className="pure-u-1-1">
+              <div className="star-avatar pure-u-1-2">
+                <img
+                  src="https://exep-archive.jpl.nasa.gov/images/soho_sun-590.jpg"
+                  alt="mock"></img>
+              </div>
+              <div className="star-profile pure-u-1-2">
+                <p>Hi my name is { props.params.id }</p>
+
+                <h2>Details</h2>
+
+                <p>Name:
+                  <span>{details.gl}</span>
+                </p>
 
 
-            <div>Spectrum:
-              <Spectrum color={star.spect}></Spectrum>
+                <div>Spectrum:
+                  {/*<Spectrum color={details.spect}></Spectrum>*/}
+                </div>
+
+                <h2>Current Ownership Status</h2>
+
+                { ownership.isOwner ? (
+                    <p>
+                      You own {details.gl}!
+                      <br />
+                      {ownership.owner}
+                    </p>
+                  ) : (
+                    <p>
+                      {details.gl} is owned by
+                      <br />
+                      {ownership.owner}
+                    </p>
+                  )}
+
+
+                { ownership.owner ?
+                    ownership.isOwner ? (
+                      <div>
+                        <AcceptBidSection starIndex={props.params.id}/>
+                        <br /><br />
+                        <OfferSection starIndex={props.params.id}/>
+                        <br />
+                        <RevokeOfferButton starIndex={props.params.id}/>
+                        <br /><br />
+                        <TransferSection starIndex={props.params.id}/>
+                        <br />
+                      </div>
+                      ) : (
+                      <div>
+                        <BidSection starIndex={props.params.id}/>
+                        <br />
+                        <RevokeBidButton starIndex={props.params.id}/>
+                        <br /><br />
+                        <BuyButton starIndex={props.params.id}/>
+                      </div>
+                      )
+                   : (
+                    <ClaimButton starIndex={props.params.id}/>
+                  ) }
+
+                <WithdrawFundsButton />
+
+                <h2>Current Marketplace Status</h2>
+              </div>
             </div>
-
-            <h2>Current Ownership Status</h2>
-            <p>{star.gl} is owned by
-              <span>Me</span>
-            </p>
-
-            <ClaimButton starIndex={props.params.id} />
-            <br /><br />
-            <BidSection starIndex={props.params.id} />
-            <br />
-            <RevokeBidButton starIndex={props.params.id} />
-            <br /><br />
-            <OfferSection starIndex={props.params.id} />
-            <br />
-            <RevokeOfferButton starIndex={props.params.id} />
-            <br /><br />
-            <BuyButton starIndex={props.params.id} />
-            <br /><br />
-            <TransferSection starIndex={props.params.id} />
-            <br />
-            <WithdrawFundsButton />
-
-            <h2>Current Marketplace Status</h2>
           </div>
         </div>
-      </div>
-    </main>
-  )
+      </main>
+    )
+  }
 }
 
 export default StarProfile
 
+// TODO:
+  // Get bids
+  // Get offers
 
 
 // [{"id":119610,"hip":null,"hd":null,"hr":null,"gl":"NN 4380","bf":null,"proper":null,"ra":23.962387,

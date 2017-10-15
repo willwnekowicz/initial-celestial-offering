@@ -9,7 +9,7 @@ function web3Initialized(results) {
   }
 }
 
-let getWeb3 = new Promise(function(resolve, reject) {
+export let getWeb3 = new Promise(function(resolve, reject) {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
   window.addEventListener('load', function(dispatch) {
     var results
