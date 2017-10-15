@@ -5,7 +5,7 @@ import './zeppelin/ownership/Ownable.sol';
 contract StarMarket is Ownable {
 
 // You can use this hash to verify the csv file containing all the stars
-    string public csvHash = "";
+    string public csvHash = "039fdcdcfc31968c6938863ac1d293854ba810bbfa0bcd72b1f4cc2d544f3d08";
 
     address owner;
 
