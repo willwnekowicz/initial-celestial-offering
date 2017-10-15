@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ClaimButton from './claimbutton/ClaimButtonContainer';
+
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
   const style = { background: colors[color[0].toLowerCase()] }
@@ -14,7 +16,7 @@ const StarProfile = (props) => {
       <div className="pure-g">
         <div className="pure-u-1-1">
           <div className="star-avatar pure-u-1-2">
-            <img src="https://exep-archive.jpl.nasa.gov/images/soho_sun-590.jpg"></img>
+            <img src="https://exep-archive.jpl.nasa.gov/images/soho_sun-590.jpg" alt="mock"></img>
           </div>
           <div className="star-profile pure-u-1-2">
             <p>Hi my name is { props.params.id }</p>
@@ -34,6 +36,8 @@ const StarProfile = (props) => {
             <p>{star.gl} is owned by
               <span>Me</span>
             </p>
+
+            <ClaimButton starIndex={props.params.id} />
 
             <h2>Current Marketplace Status</h2>
           </div>
