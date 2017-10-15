@@ -28,7 +28,7 @@ class development_ico_api:
 		if self.DEBUG:
 			cgitb.enable()
 		
-		self.index = []
+		self.table = []
 		self.data = {}
 		
 		self.parse_csv()
@@ -44,9 +44,9 @@ class development_ico_api:
 			
 			entry = line.strip().split(',')
 			
-			if self.index == []:
+			if self.table == []:
 				# First line contains field names
-				self.index = entry[:]
+				self.table = entry[:]
 			
 			else:
 				# First value of each line is the unique ID
@@ -62,7 +62,7 @@ class development_ico_api:
 		
 		index = 0
 		
-		for each in self.index:
+		for each in self.table:
 			print("%s: %s</br>" % (each, self.data[api_id][index]))
 			index += 1
 		
@@ -79,13 +79,14 @@ class development_ico_api:
 		
 		if ( (not is_number(api_id)) or
 		     (int(api_id) > len(self.data)+1) ):
-			print('"id": "not found"\n}')
+			#print('"id": "not found"\n}')
+			print("}")
 			return
 		
 		
 		count = 0
 		
-		for each in self.index[:-1]:
+		for each in self.table[:-1]:
 			
 			if is_number(self.data[api_id][count]):
 				print('\t"%s": %s,' % (each, self.data[api_id][count]))
@@ -95,11 +96,86 @@ class development_ico_api:
 		
 		
 		if is_number(self.data[api_id][count]):
-			print('\t"%s": %s' % (self.index[-1], self.data[api_id][count]))
+			print('\t"%s": %s' % (self.table[-1], self.data[api_id][count]))
 		else:
-			print('\t"%s": "%s"' % (self.index[-1], self.data[api_id][count]))
+			print('\t"%s": "%s"' % (self.table[-1], self.data[api_id][count]))
 		
 		print("}")
+	
+	
+	##################################################################
+	
+	def display_con_json(self, con_id, proper_only=False):
+		
+		display_header_json()
+		
+		results = []
+		
+		
+		print("[")
+		
+		keys = self.data.keys()
+		keys.sort()
+		
+		for key in keys:
+			if self.data[key][ self.table.index('con') ] == con_id:
+				
+				if (not proper_only):
+					results.append(self.data[key])
+				else:
+					if (self.data[key][ self.table.index('proper') ]) != "":
+						results.append(self.data[key])
+		
+		if results == []:
+			print("]")
+			return
+		
+		
+		for result in results[:-1]:
+		
+			print("\t{")
+			
+			count=0
+			
+			for each in self.table[:-1]:
+				
+				if is_number(result[count]):
+					print('\t\t"%s": %s,' % (each, result[count]))
+				else:
+					print('\t\t"%s": "%s",' % (each, result[count]))
+				count += 1
+			
+			
+			if is_number(result[count]):
+				print('\t\t"%s": %s' % (self.table[-1], result[count]))
+			else:
+				print('\t\t"%s": "%s"' % (self.table[-1], result[count]))
+			
+			print("\t},")
+		
+		
+		print("\t{")
+		
+		count=0
+		
+		for each in self.table[:-1]:
+			
+			if is_number(self.data[key][count]):
+				print('\t\t"%s": %s,' % (each, results[-1][count]))
+			else:
+				print('\t\t"%s": "%s",' % (each, results[-1][count]))
+			count += 1
+		
+		
+		if is_number(self.data[key][count]):
+			print('\t\t"%s": %s' % (self.table[-1], results[-1][count]))
+		else:
+			print('\t\t"%s": "%s"' % (self.table[-1], results[-1][count]))
+		
+		print("\t}")
+		
+		
+		print("]")
 	
 	
 	##################################################################
@@ -112,6 +188,22 @@ class development_ico_api:
 			
 			#self.display_id_html(api_id)
 			self.display_id_json(api_id)
+			
+			return
+		
+		
+		if 'con' in self.form.keys():
+			
+			con_id = self.form['con'].value
+			
+			
+			proper_only = False
+			
+			if 'proper_only' in self.form.keys():
+				proper_only = "%s" % self.form['proper_only'].value == "True"
+			
+			
+			self.display_con_json(con_id, proper_only)
 	
 	
 	##################################################################
