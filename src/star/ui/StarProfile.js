@@ -2,6 +2,7 @@ import React from 'react';
 
 import ClaimButton from './claimbutton/ClaimButtonContainer';
 import BidSection from './bidbutton/BidSection';
+import OfferSection from './offerbutton/OfferSection';
 
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
@@ -39,8 +40,10 @@ const StarProfile = (props) => {
             </p>
 
             <ClaimButton starIndex={props.params.id} />
-
+            <br /><br />
             <BidSection starIndex={props.params.id} />
+            <br />
+            <OfferSection starIndex={props.params.id} />
 
             <h2>Current Marketplace Status</h2>
           </div>
