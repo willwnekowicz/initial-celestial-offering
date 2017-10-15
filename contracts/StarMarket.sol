@@ -19,6 +19,7 @@ contract StarMarket is Ownable {
     uint public nextStarIndexToAssign = 0; // TODO: unused, remove?
 
     bool public allStarsAssigned = false;
+    bool public canClaimStars = false;
     uint public starsRemainingToAssign = 0;
 
 //mapping (address => uint) public addressToStarIndex;
@@ -96,11 +97,17 @@ contract StarMarket is Ownable {
 
     function allInitialOwnersAssigned() onlyOwner {
         allStarsAssigned = true;
+        canClaimStars = true;
     }
 
     function updateCSV(string newHash, uint256 newTotalSupply) onlyOwner {
+        if (newTotalSupply < totalSupply) revert();         // We should only be able to add stars to the db
         csvHash = newHash;
-        totalSupply = newTotalSupply;
+        if (totalSupply != newTotalSupply) {
+            starsRemainingToAssign = newTotalSupply - totalSupply;
+            canClaimStars = true;
+            totalSupply = newTotalSupply;
+        }
     }
 
     function updateClaimFee(uint256 newClaimFee) onlyOwner {
@@ -109,7 +116,7 @@ contract StarMarket is Ownable {
     }
 
     function getStar(uint starIndex) {
-        if (!allStarsAssigned) revert();
+        if (!allStarsAssigned && !canClaimStars) revert();
         if (starsRemainingToAssign == 0) revert();
         if (starIndexToAddress[starIndex] != 0x0) revert();
         if (starIndex >= totalSupply) revert();
@@ -118,6 +125,9 @@ contract StarMarket is Ownable {
         starIndexToAddress[starIndex] = msg.sender;
         balanceOf[msg.sender]++;
         starsRemainingToAssign--;
+        if (starsRemainingToAssign == 0) {
+            canClaimStars = false;
+        }
         Assign(msg.sender, starIndex);
     }
 
