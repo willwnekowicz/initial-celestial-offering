@@ -6,6 +6,7 @@ import BidSection from './bidbutton/BidSection';
 import OfferSection from './offerbutton/OfferSection';
 import TransferSection from './transferbutton/TransferSection';
 import RevokeOfferButton from './revokeOfferbutton/RevokeOfferButtonContainer';
+import RevokeBidButton from './revokeBidbutton/RevokeBidButtonContainer';
 
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
@@ -46,6 +47,8 @@ const StarProfile = (props) => {
             <br /><br />
             <BidSection starIndex={props.params.id} />
             <br />
+            <RevokeBidButton starIndex={props.params.id} />
+            <br /><br />
             <OfferSection starIndex={props.params.id} />
             <br />
             <RevokeOfferButton starIndex={props.params.id} />
