@@ -25,7 +25,55 @@
 }
 
 .star-main {
-    display: inline-block;
-    vertical-align: top;
     padding-left: 300px;
+}
+
+.star-image {
+    font-size: 200px;
+    text-align: center;
+    color: #091A2C;
+}
+
+.star-name {
+    font-size: 32px;
+    text-align: center;
+}
+
+.star-constellation {
+    padding-top: 10px;
+    font-size: 24px;
+    text-align: center;
+    height: 33px;
+}
+
+.account-details {
+    position: fixed;
+    bottom: 0;
+    border-top: 1px solid #091A2C;
+    width: 100%;
+    height: 20px;
+    padding: 30px;
+}
+
+.account-number {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 40px;
+}
+
+.account-buttons {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+button {
+    border: 1px solid #091A2C;
+    color: white;
+    background: #091A2C;
+}
+
+button:hover {
+    border: 1px solid #091A2C;
+    color: #091A2C;
+    background: white;
 }

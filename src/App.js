@@ -19,7 +19,6 @@ class App extends Component {
         <nav className="navbar pure-menu pure-menu-horizontal">
           <Link to="/" className="pure-menu-heading pure-menu-link">Initial Celestial Offering</Link>
         </nav>
-
         {this.props.children}
       </div>
     );
