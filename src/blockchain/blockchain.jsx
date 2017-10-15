@@ -24,11 +24,9 @@ render() {
     const columns = [{
         Header: 'Name',
         accessor: 'name',
-        // Cell: d => d.name
     }, {
         Header: 'Age',
         accessor: 'age',
-        // Cell: d => d.age
     }];
 
        return <ReactTable data={data} columns={columns}/>
