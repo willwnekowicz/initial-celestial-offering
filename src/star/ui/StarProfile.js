@@ -1,5 +1,13 @@
 import React from 'react';
 
+import BuyButton from './buybutton/BuyButtonContainer';
+import ClaimButton from './claimbutton/ClaimButtonContainer';
+import BidSection from './bidbutton/BidSection';
+import OfferSection from './offerbutton/OfferSection';
+import TransferSection from './transferbutton/TransferSection';
+import RevokeOfferButton from './revokeOfferbutton/RevokeOfferButtonContainer';
+import RevokeBidButton from './revokeBidbutton/RevokeBidButtonContainer';
+import WithdrawFundsButton from './withdrawFundsbutton/WithdrawFundsButtonContainer';
 
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
@@ -15,7 +23,7 @@ const StarProfile = async (props) => {
       <div className="pure-g">
         <div className="pure-u-1-1">
           <div className="star-avatar pure-u-1-2">
-            <img src="https://exep-archive.jpl.nasa.gov/images/soho_sun-590.jpg"></img>
+            <img src="https://exep-archive.jpl.nasa.gov/images/soho_sun-590.jpg" alt="mock"></img>
           </div>
           <div className="star-profile pure-u-1-2">
             <p>Hi my name is { props.params.id }</p>
@@ -35,6 +43,22 @@ const StarProfile = async (props) => {
             <p>{star.gl} is owned by
               <span>Me</span>
             </p>
+
+            <ClaimButton starIndex={props.params.id} />
+            <br /><br />
+            <BidSection starIndex={props.params.id} />
+            <br />
+            <RevokeBidButton starIndex={props.params.id} />
+            <br /><br />
+            <OfferSection starIndex={props.params.id} />
+            <br />
+            <RevokeOfferButton starIndex={props.params.id} />
+            <br /><br />
+            <BuyButton starIndex={props.params.id} />
+            <br /><br />
+            <TransferSection starIndex={props.params.id} />
+            <br />
+            <WithdrawFundsButton />
 
             <h2>Current Marketplace Status</h2>
           </div>
