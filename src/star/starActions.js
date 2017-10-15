@@ -65,8 +65,10 @@ export function getOwnershipDetails(starIndex) {
           starMarketInstance.starIndexToAddress.call(starIndex, {from: coinbase}).then(function(owner) {
 
             let starOwnershipDetails = {
+              hasOwner: owner != '0x0000000000000000000000000000000000000000',
               isOwner: owner == coinbase,
               owner: owner,
+              coinbase: coinbase,
             }
 
             dispatch(starOwnershipReceived(starOwnershipDetails))

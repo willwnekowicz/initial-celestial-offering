@@ -37,50 +37,47 @@ class StarProfile extends React.Component {
   render() {
     const props = this.props;
     const {details, ownership} = props;
+    const starName = details.proper || 'No Name';
+    const starConstellation = details && details.con || '';
 
     return (
       <main className="container">
         <StarDetails details={details} />
         <div className="star-main">
+          <div className="star-image">
+            ★
+          </div>
+          <div className="star-name">
+            {starName}
+          </div>
+          <div className="star-constellation">
+            {starConstellation ? starConstellation + ' constellation' : ''}
+          </div>
           <div className="pure-g">
             <div className="pure-u-1-1">
-              <div className="star-avatar pure-u-1-2">
-                <img
-                  src="https://exep-archive.jpl.nasa.gov/images/soho_sun-590.jpg"
-                  alt="mock"></img>
-              </div>
               <div className="star-profile pure-u-1-2">
-                <p>Hi my name is { props.params.id }</p>
-
-                <h2>Details</h2>
-
-                <p>Name:
-                  <span>{details.gl}</span>
-                </p>
-
-
-                <div>Spectrum:
-                  {/*<Spectrum color={details.spect}></Spectrum>*/}
-                </div>
-
                 <h2>Current Ownership Status</h2>
 
-                { ownership.isOwner ? (
-                    <p>
-                      You own {details.gl}!
-                      <br />
-                      {ownership.owner}
-                    </p>
-                  ) : (
-                    <p>
-                      {details.gl} is owned by
-                      <br />
-                      {ownership.owner}
-                    </p>
-                  )}
 
+                { ownership.hasOwner ?
+                  ownership.isOwner ? (
+                      <p>
+                        You own {details.proper || 'this unnamed star'}!
+                      </p>
+                    ) : (
+                      <p>
+                        {details.proper || 'this unnamed star'} is owned by
+                        <br />
+                        {ownership.owner}
+                      </p>
+                    ) : (
+                    <p>
+                      This star is not owned. Claim it now!
+                    </p>
+                  )
+                }
 
-                { ownership.owner ?
+                { ownership.hasOwner ?
                     ownership.isOwner ? (
                       <div>
                         <AcceptBidSection starIndex={props.params.id}/>
@@ -105,10 +102,16 @@ class StarProfile extends React.Component {
                     <ClaimButton starIndex={props.params.id}/>
                   ) }
 
-                <WithdrawFundsButton />
-
                 <h2>Current Marketplace Status</h2>
               </div>
+            </div>
+          </div>
+          <div className="account-details">
+            <div className="account-number">
+              Your account: {ownership.coinbase}
+            </div>
+            <div className="account-buttons">
+              <WithdrawFundsButton />
             </div>
           </div>
         </div>
