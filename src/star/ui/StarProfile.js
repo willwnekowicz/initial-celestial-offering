@@ -3,6 +3,7 @@ import React from 'react';
 import BuyButton from './buybutton/BuyButtonContainer';
 import ClaimButton from './claimbutton/ClaimButtonContainer';
 import BidSection from './bidbutton/BidSection';
+import AcceptBidSection from './acceptBidbutton/AcceptBidSection';
 import OfferSection from './offerbutton/OfferSection';
 import TransferSection from './transferbutton/TransferSection';
 import RevokeOfferButton from './revokeOfferbutton/RevokeOfferButtonContainer';
@@ -49,6 +50,8 @@ const StarProfile = (props) => {
             <BidSection starIndex={props.params.id} />
             <br />
             <RevokeBidButton starIndex={props.params.id} />
+            <br /><br />
+            <AcceptBidSection starIndex={props.params.id} />
             <br /><br />
             <OfferSection starIndex={props.params.id} />
             <br />
