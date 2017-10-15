@@ -12,7 +12,7 @@ import WithdrawFundsButton from './withdrawFundsbutton/WithdrawFundsButtonContai
 const Spectrum = ({color}) => {
   const colors = { a: 'blue', b: 'blue', o: 'blue', f: 'light-blue', g: 'yellow', m: 'magenta', k: 'orange' }
   const style = { background: colors[color[0].toLowerCase()] }
-  return <div><div className="star-spectrum" style={style}>{color}</div></div>
+  return (<div className="star-spectrum" style={style}>{color}</div>)
 }
 
 const StarProfile = async (props) => {
