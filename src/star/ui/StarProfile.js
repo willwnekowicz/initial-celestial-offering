@@ -1,5 +1,6 @@
 import React from 'react';
 
+import BuyButton from './buybutton/BuyButtonContainer';
 import ClaimButton from './claimbutton/ClaimButtonContainer';
 import BidSection from './bidbutton/BidSection';
 import OfferSection from './offerbutton/OfferSection';
@@ -48,6 +49,8 @@ const StarProfile = (props) => {
             <OfferSection starIndex={props.params.id} />
             <br />
             <RevokeOfferButton starIndex={props.params.id} />
+            <br /><br />
+            <BuyButton starIndex={props.params.id} />
             <br /><br />
             <TransferSection starIndex={props.params.id} />
 
