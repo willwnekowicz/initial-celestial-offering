@@ -15,7 +15,7 @@ contract StarMarket is Ownable {
     uint8 public decimals;
     uint256 public totalSupply;
 
-    uint public nextStarIndexToAssign = 0;
+    uint public nextStarIndexToAssign = 0; // TODO: unused, remove?
 
     bool public allStarsAssigned = false;
     uint public starsRemainingToAssign = 0;
@@ -93,6 +93,10 @@ contract StarMarket is Ownable {
 
     function allInitialOwnersAssigned() onlyOwner {
         allStarsAssigned = true;
+    }
+
+    function updateCSVHash(string newHash) onlyOwner {
+        csvHash = newHash;
     }
 
     function getStar(uint starIndex) {
