@@ -12,6 +12,7 @@ import Home from './layouts/home/Home'
 import Dashboard from './layouts/dashboard/Dashboard'
 import SignUp from './user/layouts/signup/SignUp'
 import Profile from './user/layouts/profile/Profile'
+import StarProfile from './star/ui/StarProfile'
 
 // Redux Store
 import store from './store'
@@ -36,6 +37,7 @@ ReactDOM.render((
           <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
           <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />
           <Route path="profile" component={UserIsAuthenticated(Profile)} />
+          <Route path="stars/:id" component={StarProfile} />
         </Route>
       </Router>
     </Provider>
