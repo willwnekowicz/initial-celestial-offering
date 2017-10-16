@@ -34,8 +34,8 @@ getWeb3
 
 ReactDOM.render((
     <Provider store={store}>
-      <Router history={history}>
-        <Route path={process.env.PUBLIC_URL + '/'} component={App}>
+      <Router history={history} basename={process.env.PUBLIC_URL}>
+        <Route path="/" component={App}>
           <IndexRoute component={StarsContainer} />
           <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
           <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />
