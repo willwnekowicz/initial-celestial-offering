@@ -1,0 +1,54 @@
+ICO API Deployment
+------------------
+
+Prerequisites:
+- Apache2
+
+------------------
+
+1. Deploy Python script to cgi-bin of an Apache2 web server
+
+Example OS: macOS 10.12.6
+
+$ sudo cp -av api/ico-api.py /Library/WebServer/CGI-Executables/
+
+$ cp -av api/hygdata_v3.csv /var/tmp
+
+------------------
+
+2. Update Apache2 configuration
+
+$ sudo nano -w /etc/apache2/httpd.conf
+
+* Enable loading of CGI module
+
+#LoadModule cgi_module libexec/apache2/mod_cgi.so
+
+to
+
+LoadModule cgi_module libexec/apache2/mod_cgi.so
+
+------------------
+
+3. Restart Apache2 service
+
+$ sudo apachectl restart
+
+------------------
+
+4. Test service
+
+http://localhost/cgi-bin/ico-api.py?id=0
+
+http://localhost/cgi-bin/ico-api.py?con=And&proper_only=True
+
+http://localhost/cgi-bin/ico-api.py?con=And&proper_only=False
+
+------------------
+
+Logs:
+
+$ tail -f /var/log/apache2/access_log
+
+$ tail -f /var/log/apache2/error_log
+
